@@ -1,0 +1,225 @@
+/*-------nav------*/
+.infor a {
+   color: #0e0e0e;
+}
+.infor {
+    background: #dcdcdc;
+    height: 50px;
+}
+.a{
+    padding-top: 15px;
+}
+.infor-register{
+    padding-left:30px;
+}
+/*---------header--------*/
+.menu{
+     background: #162357;
+     height: 93px;
+ }
+.menu a{
+   color: White;
+    list-style: none;
+}
+.menu-left{
+    padding-top: 40px;
+}
+.aboutus{
+    padding-left: 15px;
+}
+.men{
+    padding-left: 30px !important;
+}
+.women{
+    padding-left: 30px;
+}
+.menu-right{
+    padding-top: 40px;
+}
+.boys{
+    padding-left: 30px;
+}
+.girls{
+    padding-left: 25px;
+}
+.contactus{
+    padding-left: 25px;
+}
+.search-icon{
+    padding-left: 15px;
+}
+/*-----------article----*/
+article{
+	width: 1600px;
+    height: 425px;
+	background: url("../images/background.png") no-repeat;
+}
+.product{
+	color:#ffffff;
+	border: 1px;
+	width: 130px;
+	height: 25px;
+	background: #23c0da;
+	margin-top:390px;
+	padding-top:10px;
+	padding-left:30px;
+	
+}
+/*----------section-------------------*/
+
+.cart,.confirmation,.thank{
+	color: #000000;
+}
+
+
+
+
+.table, th, td{
+	border:1px solid #edecec;
+}
+.table-header{
+	border: 1px solid #f1f1f1;
+	background: #f1f1f1;
+	height: 55px;
+}
+.image{
+	text-align:center;
+}
+.about-product{
+	height:180px;
+}
+.biy-horror-tshirt{
+	text-align:center;
+	font-weight: bold;
+}
+.mot{
+	text-align:center;
+}
+.mott{
+	
+	border: 1px solid #dbdbdb;
+	padding: 5px 5px;
+	margin-left:50px;
+	margin-right:50px;
+}
+.money1, .money2{
+	text-align:center;
+}
+.search-buy{
+	height: 190px;
+	background: #f3f3f3;
+}
+.input{
+	width:270px;
+	height: 40px !important; 
+	
+}
+.buy{
+	float: right;
+}
+.search{
+	padding-top: 20px;
+}
+.apply{
+	
+	margin-left: 10px;
+	width: 110px !important; 
+	height: 40px;
+	border: 0;
+	background: #ff0505;
+}
+.pay-securely{
+	
+	margin-left: 15px;
+	width: 150px !important; 
+	height: 40px;
+	border: 0;
+	background: #23c0da;
+}
+.edit{
+	border: 1px solid #dbdbdb;
+	padding: 10px;
+	margin-left: 40px;
+	background: #f1f1f1;
+}
+.delete{
+	margin-right: 40px;
+}
+.subtotal{
+	font-size: 20px;
+	margin-right: 50px;
+	padding-left: 63px;
+}
+.tax{
+	padding-left: 150px;
+	font-weight: bold;
+}
+.total{
+	font-size: 27px;
+	padding-right: 10px;
+	color: #62cbdf;
+}
+.table-items{
+	margin-bottom: 100px;
+	margin-top: 250px;
+}
+
+/*------end section-----*/
+
+
+
+
+
+
+
+
+
+/*---------------footer----------------*/
+footer{
+     background-color:#1c234d;
+ }
+footer h3{
+    margin-top: 50px;
+    font-size:24px;
+    color: #ffffff;
+}
+footer li{
+    font-size: 14px;
+    list-style:none;
+    margin-left: -25px !important;
+}
+footer .follow li{
+    color: #eaeaed;
+}
+footer a {
+    margin-left:10px;
+    color: #eaeaed;
+}
+.sex-small li, .inforend li, .contact li{
+    margin-top: 10px;
+}
+.rim-square-fb{
+    border: 1px solid #ffffff;
+    padding: 10px 10px;
+    margin-top: 20px;
+    margin-left: -25px !important;
+}
+.rim-square-gg{
+    border: 1px solid #ffffff;
+    padding: 9px 9px;
+    margin-top: 20px;
+    margin-left: 5px;
+}
+.copyright{
+    width: 100% ;
+
+    display:block;
+    text-align: center;
+    color: #f4f5f5;
+    background-color:#121a3e;
+    bottom: 0;
+    padding:20px 0;
+}
+
+
+

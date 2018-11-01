@@ -1,0 +1,39 @@
+﻿body { border-top:10px solid #fb6938; }
+header { border-bottom: 1px solid #e5e5e5; }
+header h1 { margin:26px 24px 28px 0; }
+header h1 a { display:block; width:172px; height:25px; background:url(../imgs/sprite.png) no-repeat 0 -50px; }
+header h2 { margin-top:29px; font-size:14px; line-height:25px; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; }
+
+nav a { display:inline-block; padding:0 14px; border-right:2px solid #e5e5e5; border-left:2px solid #e5e5e5; font:italic 20px Georgia, serif; }
+nav ul { margin: 0; }
+nav ul.inline li { padding: 0; line-height: 79px; }
+nav ul :first-child a { border: none; }
+nav ul :last-child a { border: none; }
+
+footer { padding-top:28px; padding-bottom:28px; border-top: 1px solid #e5e5e5; }
+footer nav a { font:normal 14px Arial, sans-serif; }
+footer nav ul.inline li { line-height: 25px; }
+
+section h1, .media h2 { margin-bottom:27px; font-family: Georgia, serif; font-size: 30px; line-height:42px; font-style: italic; color: #000; }
+img { border-bottom: 10px solid #fb6938; }
+section li { color: #ff6b39; }
+article { padding-bottom:30px; border-top: 5px solid #eee; }
+article.intro { border-top: none; border-bottom: 5px solid #eee; }
+article p { margin-bottom: 0; }
+
+body > section { padding-bottom:85px; background:url(../imgs/wave.png) repeat; }
+section section .thumbnails .span4 { width:299px; }
+section section .thumbnail { padding: 0; border:none; border-radius:0; box-shadow:none; -webkit-box-shadow:none; text-align:center; }
+section section .thumbnail h2 { margin:0; font-family: Georgia, serif; line-height:42px; font-size: 20px; font-style: italic; color: #000; }
+section section .thumbnail p, .media p { font-size: 14px; color: #7b7b7b; }
+
+.social a { display: inline-block; width: 40px; height: 40px; background: url(../imgs/sprite.png) no-repeat 0 0; }
+.social a.vimeo { background-position:-50px 0; }
+.social a.lastfm { background-position:-100px 0; }
+.social a.linkedin { background-position:-150px 0; }
+.social a.dribble { background-position:-200px 0; }
+
+.media-list { margin: 60px 0 80px; }
+.media { margin-top:50px; }
+.media .pull-left { margin-right: 30px; }
+.media h2 { line-height: inherit; }
