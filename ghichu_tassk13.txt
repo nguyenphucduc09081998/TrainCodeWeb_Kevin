@@ -1,0 +1,617 @@
+---------------------task 12----------------------------- 
+--theem vaof public 
+public function student_form() {
+		ob_start()
+		?>	
+			<h2> Student Form</h2>
+			<form method="post">
+				<table>
+					<tr>
+						<td>Student Name: </td>
+						<td><input type="text" placeholder="Username" name="username" ></td><br>
+						<?php var_dump('username'); ?>						
+					</tr>
+					<tr>
+						<td>Student Email: </td>
+						<td><input type="text" placeholder="Email" name="email" ></td><br>
+						<?php var_dump('email'); ?>	
+						
+					</tr>
+					<tr>
+						<td>Student Class: </td>
+						<td>
+							<input type="text" placeholder="class" name="class" >
+							<?php var_dump('class'); ?>	
+						</td>
+						<br>
+						
+					</tr>
+					
+					<tr>
+						<td><button type="submit" class="btn" name="submit_StudentForm">Basic</button></td><br>
+						
+					</tr>
+				</table>
+			</form>
+		<?php
+		return ob_get_clean();	
+	}
+add : add_shortcode('student_form',array($this,'student_form')); trong hamf ___construct
+-- them vao admin
+add: 		add_action('student_form',array($this,'student_form'));	
+ trong hamf __construct
+
+
+
+       ------------------------task 13--------------
+-	create custom post type manully va define field
+	
+--them vao admin
+public function create_posttype(){
+
+
+$labels= array(
+	'name'=>'students',
+'singular_name'=>'students','student_name' => 'student_name',
+'query_var' => true,'rewrite' => true,
+	'capability_type' => 'post',
+				'hierarchical' => false,
+
+			'supports' => array(
+'title',
+'editor',
+'excerpt',
+'thumbnail',
+'revisions',
+),
+'taxonomies' => array('category', 'post_tag'),
+				'menu_position' => 5,
+	'exclude_from_search' => false,
+	);
+register_post_type('students',$args);
+	}
+theem 	:	add_action('init',array($this,'create_posttype'));
+---
+--------------------------task14-------------------
+ph?n 1
+
+trong hàm constract add
+add_action('save_post',array($this,'save_meta_boxes_student'));
+		add_action( 'add_meta_boxes', array($this,'student_meta_boxes'));
+		
+		//add_action('admin_post_nopriv_update', array($this,'save_meta_boxes_student'));
+		//add_action('save-', array($this,'save_meta_boxes_student'));	
+
+		add_action('admin_post_nopriv_update', array($this,'update_to_admin'));
+		add_action('admin_post_update', array($this,'update_to_admin'));		
+thêm các hàm này vào
+public function get_student_id($post){
+		  wp_nonce_field( 'custom_nonce_action', 'custom_nonce' );
+		$student_id =get_the_ID($post);
+			?>
+			<input type="text" name = "update_student_id" id="update_student_id" value ="<?php echo $student_id?>"/>
+		<?php
+	}
+	public function get_student_name($post){
+		  wp_nonce_field( 'custom_nonce_action', 'custom_nonce' );
+		$student_name = get_post_meta( get_the_ID($post), 'student_name', true);
+		?>
+			<input type="text" name = "update_student_name" id="update_student_name" value ="<?php echo $student_name?>"/>
+		<?php
+	}
+	
+	public function get_student_email($post){
+		  wp_nonce_field( 'custom_nonce_action', 'custom_nonce' );
+		$student_email = get_post_meta( get_the_ID($post), 'student_email', true);
+			?>
+			<input type="text" name = "update_student_email" id="update_student_email" value ="<?php echo $student_email?>"/>
+		<?php
+	}
+	
+	public function get_student_class($post){
+		  wp_nonce_field( 'custom_nonce_action', 'custom_nonce' );
+		$student_class = get_post_meta( get_the_ID($post), 'student_class', true);
+			?>
+			<input type="text" name = "update_student_class" id="update_student_class" value ="<?php echo $student_class?>"/>
+		<?php
+	}
+	
+	public function student_meta_boxes(){
+		add_meta_box('student_id', 'student-id', array($this, 'get_student_id'), 'students');
+		add_meta_box('student_name', 'student-name', array($this, 'get_student_name'), 'students');
+		add_meta_box('student_email', 'student-email', array($this, 'get_student_email'), 'students');
+		add_meta_box('student_class', 'student-class', array($this, 'get_student_class'), 'students');
+	}
+	public function save_meta_boxes_student($post_id){
+		 $nonce_name   = isset( $_POST['custom_nonce'] ) ? $_POST['custom_nonce'] : '';
+        $nonce_action = 'custom_nonce_action';
+        // Check if nonce is set.
+        if ( ! isset( $nonce_name ) ) {
+            return;
+        }
+        // Check if nonce is valid.
+        if ( ! wp_verify_nonce( $nonce_name, $nonce_action ) ) {
+            return;
+        }
+ 
+        // Check if user has permissions to save data.
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+ 
+        // Check if not an autosave.
+        if ( wp_is_post_autosave( $post_id ) ) {
+            return;
+        }
+ 
+        // Check if not a revision.
+        if ( wp_is_post_revision( $post_id ) ) {
+            return;
+        }
+		$student_name= (isset($_POST['update_student_name'])) ? $_POST['update_student_name'] : get_post_meta($post_id , 'student_name', true);
+		
+		$student_email= (isset($_POST['update_student_email'])) ? $_POST['update_student_email'] : get_post_meta($post_id , 'student_email', true);
+		
+		$student_class= (isset($_POST['update_student_class'])) ? $_POST['update_student_class'] : get_post_meta($post_id , 'student_class', true);
+		
+		update_post_meta($post_id,'student_name',$student_name);
+		update_post_meta($post_id,'student_email',$student_email);
+		update_post_meta($post_id,'student_class',$student_class);
+	}
+	public function update_to_admin(){   
+        $post_id= $_POST['student_id'];
+        $student_name= (isset($_POST['update_student_name'])) ? $_POST['update_student_name'] : get_post_meta($post_id , 'student_name', true);
+        $student_email= (isset($_POST['update_student_email'])) ? $_POST['update_student_email'] : get_post_meta($post_id , 'student_email', true);
+        $student_class= (isset($_POST['update_student_class'])) ? $_POST['update_student_class'] : get_post_meta($post_id , 'student_class', true);
+       
+	   $stu_post = array(
+			'ID'           => $post_id,
+			'post_title'    => 'students',
+			//'post_status'   => 'publish',
+			'post_content'  => $_POST['student_name'].$_POST['student_email'].$_POST['student_class'],
+			
+			 //'post_title'    => wp_strip_all_tags( $_POST['post_title']),
+		 // 'post_content'  =>'Student name :'.$_POST['student_name']."\n ".'Student email : '.$_POST['student_email']."\n".'Student class :'.$_POST['student_class']." ",
+		  'post_title' => 'student post', // title of the article
+		  'post_status'   =>
+ 'publish',
+		  'post_type' => 'students',
+			);
+	   
+		wp_insert_post( $stu_post );
+		update_post_meta($post_id,'student_name',$student_name);
+        update_post_meta($post_id,'student_email',$student_email);
+        update_post_meta($post_id,'student_class',$student_class);
+
+    }
+
+phan 1:
+	 
+	public function prefix_send_email_to_admin(){
+		//echo $_POST["fullname"];
+		
+		$userID = get_current_user_id();
+		$my_post = array(
+		  'post_title'    => wp_strip_all_tags( $_POST['post_title']),
+		  	  
+		  'post_content'  =>'Student :'.$_POST['student_name']."\n "
+		 .'Student email : '.$_POST['student_email']."\n".'Student class :'.$_POST['student_class']." ",
+		  'post_title' => 'student post', // title of the article
+		  'post_status'   => 'publish',
+		  'post_type' => 'students',
+		);
+		// Insert the post into the databas
+        $post_id  = (wp_insert_post($my_post));
+
+        $student_name= (isset($_POST['student_name'])) ? $_POST['student_name'] : get_post_meta($post_id , 'student_name', true);
+        $student_email= (isset($_POST['student_email'])) ? $_POST['student_email'] : get_post_meta($post_id , 'student_email', true);
+        $student_class= (isset($_POST['student_class'])) ? $_POST['student_class'] : get_post_meta($post_id , 'student_class', true);
+
+        update_post_meta($post_id,'student_name',$student_name);
+        update_post_meta($post_id,'student_email',$student_email);
+        update_post_meta($post_id,'student_class',$student_class);
+
+	}
+	public function prefix_send_proflie_to_admin(){
+		echo $_POST["student_name"];
+		echo $_POST["student_email"];
+		echo $_POST["student_class"];			
+	}
+
+	public function get_student_name(){
+		$name = $_POST['student_name'];
+		update_post_meta('student_info', 'student_name',$name);	
+	}	
+	
+	public function create_admin_menu(){
+		add_menu_page(
+			 __( 'admin Menu Title'),
+			'admin menu',
+			'manage_options',
+			'custom_page',
+			array($this, 'admin_setting_function')
+			
+		);
+	}
+	
+	/*
+		admin function
+	*/
+	public function admin_setting_function(){		
+		?>		
+			<form action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post"enctype="multipart/form-data">
+				Pagination number:<input type="text" name="pagination_number" id="pagination_number"/>
+				<input type="submit" value =" submit"/>
+				
+			</form>
+		<?php
+	}
+	
+	
+    
+	
+	
+	
+	/*
+		admin function
+	*/
+	
+	
+	/*end admin function*/
+	
+	public function create_posttype() {
+		// CPT Options
+            $labels = array(
+					'name' =>  'students',
+					'singular_name' =>  'Student',
+					'student_name' => 'student_name',
+					'student_email' => 'student_email',
+					'student_class' => 'student_class',
+				);
+        $args = array(
+            'labels' => $labels,
+            'post_status' => 'publish',
+            'public' => true,
+            'has_archive' => true,
+
+            'publicly_queryable' => true,
+            'query_var' => true,
+            'rewrite' => true,
+            'capability_type' => 'post',
+            'hierarchical' => false,
+
+            'supports' => array(
+                'title',
+                'editor',
+                'excerpt',
+                'thumbnail',
+                'revisions',
+            ),
+            'taxonomies' => array('category', 'post_tag'),
+            'menu_position' => 5,
+            'exclude_from_search' => false,
+        );
+        register_post_type('students',$args);
+	}
+	
+	
+	
+	
+			
+	public function __construct( $plugin_name, $version ) {
+		$this->plugin_name = $plugin_name;
+		$this->version = $version;	
+		add_action('init', array($this ,'create_posttype'));
+		
+		add_action('admin_menu', array($this ,'create_admin_menu'));
+		add_action('admin_post_contact_form', array($this, 'admin_setting_function'));
+
+        add_action( 'admin_post_nopriv_update',array($this,'update_to_admin') );
+        add_action( 'admin_post_update',array($this,'update_to_admin'));
+
+        add_action('admin_post_nopriv_contact_form', array($this,'prefix_send_email_to_admin'));
+		add_action('admin_post_contact_form', array($this,'prefix_send_email_to_admin'));
+		add_action('admin_post_nopriv_contact_form', array($this,'prefix_send_proflie_to_admin'));
+		add_action('admin_post_contact_form', array($this,'prefix_send_proflie_to_admin'));
+
+		add_action( 'add_meta_boxes', array($this,'meta_boxes_student'));
+		add_action( 'save_post', array($this,'save_metabox_callback'));
+	}
+	
+	public function student_name_display_callback($post){
+		wp_nonce_field('custom_nonce_action', 'custom_nonce');
+		$name = get_post_meta( get_the_ID($post), 'student_name', true);
+		
+		?>		
+			<input type="text" name="student_name_update" id="student_name_update" value="<?php  echo $name ?>">
+		<?php
+	}
+	
+	public function student_email_display_callback($post){
+		wp_nonce_field('custom_nonce_action', 'custom_nonce');
+		$email = get_post_meta(get_the_ID($post), 'student_email', true);
+		?>
+			<input type="text" name = "student_email_update" id="student_email_update" value ="<?php echo $email?>"/>
+		<?php
+	}
+	
+	public function student_class_display_callback($post){
+		wp_nonce_field( 'custom_nonce_action', 'custom_nonce' );
+		$class = get_post_meta(get_the_ID($post), 'student_class', true);
+		?>
+			<input type="text" name = "student_class_update" id="student_class_update" value ="<?php echo $class?>"/>
+		<?php
+	}
+	public function meta_boxes_student(){
+		add_meta_box( 'student name','student name',array($this, 'student_name_display_callback'), 'students',
+            'advanced',
+            'default' );	
+		add_meta_box('student email', 'student email', array($this, 'student_email_display_callback'), 'students',
+			'advanced',
+			'default');
+		add_meta_box('student class', 'student class', array($this, 'student_class_display_callback'), 'students',
+			'advanced',
+			'default');	
+	}
+	public function save_metabox_callback($post_id){
+		$nonce_name   = isset( $_POST['custom_nonce'] ) ? $_POST['custom_nonce'] : '';
+        $nonce_action = 'custom_nonce_action';
+ 
+        // Check if nonce is set.
+        if ( ! isset( $nonce_name ) ) {
+            return;
+        }
+ 
+        // Check if nonce is valid.
+        if ( ! wp_verify_nonce( $nonce_name, $nonce_action ) ) {
+            return;
+        }
+ 
+        // Check if user has permissions to save data.
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return;
+        }
+ 
+        // Check if not an autosave.
+        if ( wp_is_post_autosave( $post_id ) ) {
+            return;
+        }
+ 
+        // Check if not a revision.
+        if ( wp_is_post_revision( $post_id ) ) {
+            return;
+        }
+		$student_name= (isset($_POST['student_name_update'])) ? $_POST['student_name_update'] : get_post_meta($post_id , 'student_name', true);
+		$student_email= (isset($_POST['student_email_update'])) ? $_POST['student_email_update'] : get_post_meta($post_id , 'student_email', true);
+		$student_class= (isset($_POST['student_class_update'])) ? $_POST['student_class_update'] : get_post_meta($post_id , 'student_class', true);
+		
+		update_post_meta($post_id,'student_name',$student_name);
+		update_post_meta($post_id,'student_email',$student_email);
+		update_post_meta($post_id,'student_class',$student_class);		
+	}
+	public function update_to_admin(){
+        $post_id=$_POST['student_id'];
+        $student_name= (isset($_POST['student_name_update'])) ? $_POST['student_name_update'] : get_post_meta($post_id , 'student_name', true);
+        $student_email= (isset($_POST['student_email_update'])) ? $_POST['student_email_update'] : get_post_meta($post_id , 'student_email', true);
+        $student_class= (isset($_POST['student_class_update'])) ? $_POST['student_class_update'] : get_post_meta($post_id , 'student_class', true);
+      
+	  update_post_meta($post_id,'student_name',$student_name);
+        update_post_meta($post_id,'student_email',$student_email);
+        update_post_meta($post_id,'student_class',$student_class);
+        //$url = site_url('student-management');
+        //wp_redirect($url);
+    }
+-----------------------TASKKKKKKK15 --------------------------------
+add public
+public function student_management(){
+		
+		if($_GET['id']== 'edit'){      
+		//edit 
+			?>
+			
+                <div>
+                    <form action="<?php echo esc_url( admin_url('admin-post.php') ); ?>" method="post" >
+                        Student ID <br>
+                        <input type="text" name="student_id" id="student_id" value="<?php echo $_GET['ID'] ?>"><br>
+                        Student Name<br>
+                        <input type="text" name="student_name_update" id="student_name_update" value = "<?php $name = get_post_meta( $_GET['ID'], 'student_name', true ); echo $name;?>"><br>
+                        Student Email<br>
+                        <input type="Email"name="student_email_update" id="student_email_update" value = "<?php $email = get_post_meta( $_GET['ID'], 'student_email', true ); echo $email;?>"><br>
+                        Student Class<br>
+                        <input type="Class"name="student_class_update" id="student_class_update" value="<?php $class = get_post_meta( $_GET['ID'], 'student_class', true ); echo $class;?>"><br>
+
+                        <input type="submit" value="Update">
+                        <input type="hidden" name="action" value="update">
+						
+						<!--task16 de xuat csd-->
+						<input type="submit" value="Export">
+                        <input type="hidden" name="action" value="export"> 
+						
+							
+					</form>
+                </div>
+               
+				
+			<?php
+		}else if($_GET['id']== 'delete'){  
+		//delete
+		
+			wp_delete_post($_GET['ID']);
+			$url = site_url('student-management');
+			wp_redirect($url);
+		}
+		else{		
+			$wpb_all_student = new WP_Query(array('post_type'=>'students', 'post_status'=>'publish', 'posts_per_page'=>-1)); 
+			 if ( $wpb_all_student->have_posts() ) : ?>        
+                <table border="1">
+                    <thead>
+                    <tr>                       
+                        <th>Student Name</th>
+                        <th>Student Class</th>
+                        <th>Student Email</th>  
+					
+						<th>Image</th>
+						
+						<th>Delete/Edit</th>	
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php while ( $wpb_all_student->have_posts() ) : $wpb_all_student->the_post(); ?>
+                        <tr>                               
+                            <?php $name = get_post_meta( get_the_ID($post), 'student_name', true );?>
+                            <td><?php echo $name ?></td>
+                            <?php $class = get_post_meta( get_the_ID($post), 'student_class', true );?>
+                            <td><?php echo $class ?></td>
+                            <?php $email = get_post_meta( get_the_ID($post), 'student_email', true );?>
+                            <td><?php echo $email ?></td> 
+						
+							<?php $image = get_post_meta( get_the_ID($post), 'student_image', true );?>
+                            <td><?php echo $image ?></td> 
+							
+							<td>
+								<a href="/wordpress.test/student-management">List</a>
+								<a href="/wordpress.test/student-management/?id=delete&ID=<?php echo get_the_ID($post)?>">Delete</a>
+								<a href="/wordpress.test/student-management/?id=edit&ID=<?php echo get_the_ID($post)?>">Edit</a>
+							</td>			
+                        </tr>
+						
+                    <?php endwhile; ?>				
+						
+						
+                    </tbody>
+                </table>                  
+            <?php wp_reset_postdata(); ?>
+            <?php else : ?>
+            <p><?php( 'ko show duoc' );?></p>
+			<?php endif; ?>
+			
+			<?php
+		
+		}
+		
+        
+	}
+-----------------------TASKKKKKKK16 _1 --------------------------------
+
+INSTALL LIBARY NEXT ADD CODE VÀO ADMIN
+public function export_file_csv(){
+		
+		$options = new Options();
+		$options->set('defaultFont', 'Courier');
+		$options->set('isRemoteEnabled', TRUE);
+		$options->set('debugKeepTemp', TRUE);
+		$options->set('isHtml5ParserEnabled', true);
+		$dompdf = new Dompdf($options);		
+	
+		$wpb_all_student = new WP_Query(array('post_type'=>'students', 'post_status'=>'publish', 'posts_per_page'=>-1)); 	
+		
+		$csv = Writer::createFromFileObject(new SplTempFileObject());
+		$csv->insertOne(['student_name', 'student_email', 'student_class', 'student_image']);			
+		while ( $wpb_all_student->have_posts() ) : $wpb_all_student->the_post();  
+	
+			$name = get_post_meta( get_the_ID($post), 'student_name', true );
+			$class = get_post_meta( get_the_ID($post), 'student_class', true );
+			$email = get_post_meta( get_the_ID($post), 'student_email', true );	
+			$image = get_post_meta( get_the_ID($post), 'student_image', true );				
+			$records = [
+				[$name, $class, $email, $image],
+			];
+			$csv->insertAll($records);
+		endwhile;
+		//$csv->output('liststudent.csv');
+		
+		$dompdf->load_html($csv);
+		$dompdf->setPaper('A4', 'landscape');
+		$dompdf->render();
+		//file_put_contents('Brochure.pdf', $dompdf->output());
+		$dompdf->stream("liststudent.pdf");
+
+			
+	}
+-----------------------TASKKKKKKK16 _2 --------------------------------
+
+INSTALL LIBARY NEXT ADD CODE VÀO ADMIN
+public function export_file_csv(){
+		
+		$options = new Options();
+		$options->set('defaultFont', 'Courier');
+		$options->set('isRemoteEnabled', TRUE);
+		$options->set('debugKeepTemp', TRUE);
+		$options->set('isHtml5ParserEnabled', true);
+		$dompdf = new Dompdf($options);		
+	
+		$wpb_all_student = new WP_Query(array('post_type'=>'students', 'post_status'=>'publish', 'posts_per_page'=>-1)); 	
+		
+		$csv = Writer::createFromFileObject(new SplTempFileObject());
+		
+				
+		$csv->insertOne('<table>');	
+	
+		$csv->insertOne('<tr><th>Name</th> <th>Class</th> <th>Email</th> <th>Image</th></tr>');	
+	
+		while ( $wpb_all_student->have_posts() ) : $wpb_all_student->the_post();  
+			
+			$csv->insertOne('<tr><td>');	
+			$name = get_post_meta( get_the_ID($post), 'student_name', true );
+			$csv->insertOne('$name');
+			$csv->insertOne('</td><td>');	
+			$class = get_post_meta( get_the_ID($post), 'student_class', true );
+			$csv->insertOne($class);
+			$csv->insertOne('</td><td>');	
+			$email = get_post_meta( get_the_ID($post), 'student_email', true );	
+			$csv->insertOne($email);
+			$csv->insertOne('</td><td>');	
+			$image = get_post_meta( get_the_ID($post), 'student_image', true );	
+			$csv->insertOne($image);
+			$csv->insertOne('</td></tr>');	
+			
+		endwhile;
+		$csv->insertOne('</table>');
+		//$csv->output('liststudent.csv');
+		
+		$dompdf->load_html($csv);
+		//$dompdf->setPaper('A4', 'landscape');
+		$dompdf->render();
+		//file_put_contents('Brochure.pdf', $dompdf->output());
+		$dompdf->stream("liststudent.pdf");
+
+			
+	}
+
+-----------------------TASKKKKKKK16 _ --------------------------------
+add admin--
+public function export_file_csv(){
+		
+		$options = new Options();
+		$options->set('defaultFont', 'Courier');
+		$options->set('isRemoteEnabled', TRUE);
+		$options->set('debugKeepTemp', TRUE);
+		$options->set('isHtml5ParserEnabled', true);
+		$dompdf = new Dompdf($options);		?>		
+		<?php
+		$wpb_all_student = new WP_Query(array('post_type'=>'students', 'post_status'=>'publish', 'posts_per_page'=>-1)); 			
+		
+		$csv = Writer::createFromString('');			
+		//$csv->insertOne('<table>');				
+		//$csv->insertOne('<tr><th>Name</th><th>Class</th><th>Email</th><th>Image</th></tr>');			
+		while ( $wpb_all_student->have_posts() ) : $wpb_all_student->the_post();  
+			
+			
+		$html = '<label>Student Name</label>:'. get_post_meta( get_the_ID($post), 'student_name', true ).'</br>'.
+		'<label>Student Email</label>:'. get_post_meta( get_the_ID($post), 'student_class', true ).'</br>'.
+		'<label>Student Class</label>: '. get_post_meta( get_the_ID($post), 'student_class', true ).'</br>'.	
+		'<label>Student image</label>:</br> '.'<image width="100" height="50" src="'.('http://wordpress.test/wp-content/uploads/2018/10/anhcongty1.jpg ') .'"></image>';		
+		endwhile;
+		$dompdf->loadHtml($html);
+		$dompdf->setPaper('A4', 'landscape');
+		$dompdf->render();	
+	$dompdf->stream();
+			
+	}
+
+
+
+
+
+
+
