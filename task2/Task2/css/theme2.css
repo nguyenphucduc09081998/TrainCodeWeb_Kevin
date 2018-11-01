@@ -1,0 +1,10 @@
+body {border-top:10px solid #ff7f00  } 
+.im {margin-top: 15px;}
+header h2 { margin-top: 8px; font-size: 14px;  font-style: Regular;}
+
+
+
+footer { padding-top:28px; padding-bottom: 28px; border-top: 1px solid #e5e5e5;}
+footer nav a { font:normal 14px Arial, sans-serif;   }
+footer nav ul.inline li { line-height: 25px;  }
+.inline a {color: orange;}
